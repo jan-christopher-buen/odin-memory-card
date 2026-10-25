@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react'
 import { loadRoster } from './services/pokemon-api.js'
 import { shuffle } from './utils/shuffle.js'
 import CardGrid from './components/CardGrid.jsx'
+import Scoreboard from './components/Scoreboard.jsx'
+import GameStatus from './components/GameStatus.jsx'
+import { createRound, selectCard } from './utils/game.js'
 
 export default function App() {
   const [attempt, setAttempt] = useState(0)
   const [load, setLoad] = useState({ status: 'loading', error: '' })
-  const [cards, setCards] = useState([])
+  const [game, setGame] = useState(() => createRound([]))
 
   useEffect(() => {
     const controller = new AbortController()
@@ -21,7 +24,7 @@ export default function App() {
       try {
         const roster = await loadRoster(controller.signal)
         if (active) {
-          setCards(shuffle(roster))
+          setGame(createRound(shuffle(roster)))
           setLoad({ status: 'ready', error: '' })
         }
       } catch (error) {
@@ -54,10 +57,23 @@ export default function App() {
     setAttempt((previous) => previous + 1)
   }
 
+  function chooseCard(id) {
+    if (load.status !== 'ready' || game.phase !== 'playing') return
+    const shuffledCards = shuffle(game.cards)
+    setGame((previous) => selectCard(previous, id, shuffledCards))
+  }
+
+  function restartRound() {
+    if (load.status !== 'ready') return
+    const shuffledCards = shuffle(game.cards)
+    setGame((previous) => createRound(shuffledCards, previous.best))
+  }
+
   return (
     <main>
       <h1>Pokémon Memory</h1>
       <p>Choose each Pokémon once. The cards shuffle after every pick.</p>
+      <Scoreboard score={game.selectedIds.length} best={game.best} />
       <div role="status" aria-live="polite">
         {load.status === 'loading' && <p>Gathering your Pokémon…</p>}
         {load.status === 'error' && (
@@ -67,7 +83,20 @@ export default function App() {
           </>
         )}
       </div>
-      {load.status === 'ready' && <CardGrid cards={cards} />}
+      {load.status === 'ready' && (
+        <>
+          <GameStatus
+            message={game.message}
+            won={game.phase === 'won'}
+            onRestart={restartRound}
+          />
+          <CardGrid
+            cards={game.cards}
+            onSelect={chooseCard}
+            locked={game.phase === 'won'}
+          />
+        </>
+      )}
     </main>
   )
 }
