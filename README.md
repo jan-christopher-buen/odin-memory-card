@@ -2,6 +2,8 @@
 
 A responsive React memory game built for [The Odin Project’s Memory Card assignment](https://www.theodinproject.com/lessons/node-path-react-new-memory-card). Pick twelve different Pokémon while keeping track of your choices as the deck shuffles.
 
+[Play the live game](https://odin-memory-card-eta-silk.vercel.app/)
+
 ## How to play
 
 - All twelve cards stay face up. Choose a Pokémon you have not selected in the current round.
