@@ -71,15 +71,27 @@ export default function App() {
 
   return (
     <main>
-      <h1>Pokémon Memory</h1>
-      <p>Choose each Pokémon once. The cards shuffle after every pick.</p>
-      <Scoreboard score={game.selectedIds.length} best={game.best} />
-      <div role="status" aria-live="polite">
+      <header className="masthead">
+        <div>
+          <p className="eyebrow">A little focus. A little adventure.</p>
+          <h1>
+            Pokémon <span>Memory</span>
+          </h1>
+          <p className="instructions">
+            Twelve familiar faces. Choose each Pokémon only once — the cards
+            shuffle after every pick. How many can you remember?
+          </p>
+        </div>
+        <Scoreboard score={game.selectedIds.length} best={game.best} />
+      </header>
+      <div className="load-status" role="status" aria-live="polite">
         {load.status === 'loading' && <p>Gathering your Pokémon…</p>}
         {load.status === 'error' && (
           <>
             <p>{load.error}</p>
-            <button onClick={retry}>Retry</button>
+            <button className="action" onClick={retry}>
+              Retry
+            </button>
           </>
         )}
       </div>
@@ -97,6 +109,20 @@ export default function App() {
           />
         </>
       )}
+      <footer>
+        <p>
+          Made for{' '}
+          <a href="https://www.theodinproject.com/lessons/node-path-react-new-memory-card">
+            The Odin Project
+          </a>{' '}
+          · Data from <a href="https://pokeapi.co/">PokéAPI</a>
+        </p>
+        <p>
+          A noncommercial learning project. Pokémon names and artwork belong to
+          their respective owners, including Nintendo, Game Freak, and
+          Creatures. Unofficial and unaffiliated.
+        </p>
+      </footer>
     </main>
   )
 }

@@ -6,8 +6,11 @@ export default function MemoryCard({ card, onSelect, locked }) {
     <li>
       <button
         className="memory-card"
+        aria-label={card.name.replaceAll('-', ' ')}
         aria-disabled={locked || undefined}
-        onClick={() => onSelect?.(card.id)}
+        onClick={() => {
+          if (!locked) onSelect(card.id)
+        }}
       >
         <span className="artwork">
           {imageFailed ? (

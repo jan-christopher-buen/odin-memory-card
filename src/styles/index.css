@@ -1,8 +1,1 @@
-:root {
-  font-family: system-ui, sans-serif;
-  color: #252923;
-  background: #f6f5f0;
-}
-body {
-  margin: 0;
-}
+@import './app.css';
