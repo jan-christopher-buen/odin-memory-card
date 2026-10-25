@@ -1,0 +1,24 @@
+import { defineConfig } from 'eslint/config'
+import js from '@eslint/js'
+import globals from 'globals'
+import hooks from 'eslint-plugin-react-hooks'
+import refresh from 'eslint-plugin-react-refresh'
+
+export default defineConfig([
+  { ignores: ['dist/**', 'node_modules/**', '.playwright-mcp/**'] },
+  {
+    files: ['**/*.{js,jsx}'],
+    extends: [
+      js.configs.recommended,
+      hooks.configs.flat.recommended,
+      refresh.configs.vite,
+    ],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: globals.browser,
+      parserOptions: { ecmaFeatures: { jsx: true } },
+    },
+    rules: { 'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }] },
+  },
+])
